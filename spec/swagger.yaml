@@ -1,0 +1,414 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Draft Orders API",
+        "description": "Shopify Draft Orders API"
+    },
+    "schemes": [
+        "https"
+    ],
+    "host": "simple.api",
+    "basePath": "/openapi101",
+    "paths": {
+        "/admin/draft_orders.json": {
+            "get": {
+                "summary": "Gets draft orders",
+                "description": "Retrieve a list of all Draft Orders.",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/fields"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "name": "page",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of DraftOrder",
+                        "schema": {
+                            "$ref": "#/definitions/DraftOrder"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "Creates a draft order",
+                "description": "send a draft order in body of the request",
+                "parameters": [
+                    {
+                        "name": "draftorder",
+                        "in": "body",
+                        "description": "The draft order to create.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/DraftOrder"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The draft order you created",
+                        "schema": {
+                            "$ref": "#/definitions/DraftOrder"
+                        }
+                    },
+                    "400": {
+                        "description": "example",
+                        "schema": {
+                            "$ref": "#/definitions/DraftOrder"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/draft_orders/#{id}.json": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/id"
+                }
+            ],
+            "get": {
+                "summary": "Receive a single Draft Order",
+                "description": "Receive a single Draft Order",
+                "responses": {
+                    "200": {
+                        "description": "A single DraftOrder",
+                        "schema": {
+                            "$ref": "#/definitions/DraftOrder"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Modify an existing draft order",
+                "description": "Modify an existing draft order.\n### Example\n  Only showing the parameters needed to select a particular shipping rate as returned from\n    `GET /admin/draft_orders/#{id}/shipping_rates`\n\n\n    draft_order: {\n      shipping_line: {\n        handle: ,\n        phone:\n      }\n    }\n\n\n\n\n  \n",
+                "parameters": [
+                    {
+                        "name": "draft_order",
+                        "in": "body",
+                        "description": "the draft order to modify.",
+                        "schema": {
+                            "$ref": "#/definitions/DraftOrder"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "returns draft_order object",
+                        "schema": {
+                            "$ref": "#/definitions/DraftOrder"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "removes a draft order from the database.",
+                "description": "retruns {}",
+                "responses": {
+                    "200": {
+                        "description": "A single DraftOrder",
+                        "schema": {
+                            "$ref": "#/definitions/DraftOrder"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/draft_orders/count.json": {
+            "get": {
+                "summary": "Return count",
+                "description": "Returns count of draft orders",
+                "responses": {
+                    "200": {
+                        "description": "Integer",
+                        "schema": {
+                            "$ref": "#/parameters/Integer"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/draft_orders/#{id}/shipping_rates.json": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/id"
+                }
+            ],
+            "get": {
+                "summary": "gets shipping rates for a specific draft order",
+                "description": "Get a list of available shipping rates for the specified draft order. Implementers will need to poll this endpoint until rates become available. Calling this endpoint without first specifying a shipping address on the draft order will return an error response. Possible responses outlined below.\n\n  #### Rates have been requested and are available\n  ```\n  \n# Response HTTP/1.1 200 OK {\n  \"shipping_rates\": [\n    {\n      \"handle\": \"shopify-Standard%20Shipping-10.00\",\n      “phone_required”: false,\n      \"price\": \"10.00\",\n      \"title\": \"Standard Shipping\",\n      “draft_order”: \n      {\n         “subtotal_price”: “10.00”,\n         “total_price”: “21.50”,\n         “total_tax”: “1.50”\n      }\n    },\n    {\n      \"handle\": \"ups-11-19.45\",\n      “phone_required”: false,\n      \"price\": \"19.45\",\n      \"title\": \"UPS Standard\",\n      “draft_order”: \n      {\n         “subtotal_price”: “10.00”,\n         “total_price”: “30.95”,\n         “total_tax”: “1.50”\n      }\n    },\n    {\n      \"handle\": \"ups-02-19.69\",\n      “phone_required”: true,\n      \"price\": \"19.69\",\n      \"title\": \"UPS Expedited\",\n      “draft_order”: \n      {\n         “subtotal_price”: “10.00”,\n         “total_price”: “31.19”,\n         “total_tax”: “1.50”\n      }\n    }\n  ]\n}\n\n  \n  \n```\n  #### Rates have been requested but none are available for the current shipping address\n\n    # Response\n    HTTP/1.1 200 OK\n    {\n      \"shipping_rates\": []\n    }\n",
+                "responses": {
+                    "200": {
+                        "description": "List of shipping_rate.  Rates have been requested and are available",
+                        "schema": {
+                            "$ref": "#/definitions/shipping_rate"
+                        },
+                        "examples": {
+                            "shipping_rates": [
+                                {
+                                    "handle": "shopify-Standard%20Shipping-10.00",
+                                    "“phone_required”": false,
+                                    "price": "10.00",
+                                    "title": "Standard Shipping",
+                                    "“draft_order”": {
+                                        "“subtotal_price”": "“10.00”",
+                                        "“total_price”": "“21.50”",
+                                        "“total_tax”": "“1.50”"
+                                    }
+                                },
+                                {
+                                    "handle": "ups-11-19.45",
+                                    "“phone_required”": false,
+                                    "price": "19.45",
+                                    "title": "UPS Standard",
+                                    "“draft_order”": {
+                                        "“subtotal_price”": "“10.00”",
+                                        "“total_price”": "“30.95”",
+                                        "“total_tax”": "“1.50”"
+                                    }
+                                },
+                                {
+                                    "handle": "ups-02-19.69",
+                                    "“phone_required”": true,
+                                    "price": "19.69",
+                                    "title": "UPS Expedited",
+                                    "“draft_order”": {
+                                        "“subtotal_price”": "“10.00”",
+                                        "“total_price”": "“31.19”",
+                                        "“total_tax”": "“1.50”"
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "202": {
+                        "description": "Accepted",
+                        "schema": {},
+                        "examples": {}
+                    },
+                    "412": {
+                        "description": "Rates have been requested but the draft order doesn’t have a shipping address",
+                        "headers": "HTTP/1.1 412 Precondition Failed",
+                        "schema": null,
+                        "examples": {
+                            "errors": {
+                                "draft_order": {
+                                    "shipping_address": [
+                                        "can't be blank"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/draft_orders/#{id}/send_invoice.json": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/id"
+                }
+            ],
+            "post": {
+                "summary": "Send Invoice - “Minimal request” does not require any parameters to be sent (no request body at all or just an empty draft_order_invoice hash)",
+                "parameters": [
+                    {
+                        "name": "draft_order_invoice",
+                        "in": "body",
+                        "description": "draft_order_invoice to post.",
+                        "schema": {
+                            "$ref": "#/definitions/draft_order-invoice"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "draft order invoice",
+                        "schema": {
+                            "$ref": "#/definitions/draft_order_invoice"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/draft_orders/#{id}/complete.json": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/id"
+                }
+            ],
+            "put": {
+                "summary": "Remove a Draft Order from the database",
+                "parameters": [
+                    {
+                        "name": "payment_gateway_id",
+                        "in": "body",
+                        "description": "Gateway used to receive payment. Either ID of custom manual gateway, or null if using the default “Mark As Paid” gateway.",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "paymentPending",
+                        "in": "body",
+                        "description": "true/false",
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "draft order",
+                        "schema": {
+                            "$ref": "#/definitions/DraftOrder"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/draft_orders/#{id}/checkout.json": {
+            "parameters": [
+                {
+                    "$ref": "#/parameters/id"
+                }
+            ],
+            "post": {
+                "summary": "Create or retrieve existing checkout for this draft order, to be used in Checkout API. Requires checkout scope",
+                "responses": {
+                    "200": {
+                        "description": "Checkout",
+                        "schema": {
+                            "$ref": "#/definitions/checkout"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "DraftOrder": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The id of the draft order."
+                },
+                "order_id": {
+                    "type": "string",
+                    "description": "The id of the order associated to the draft order, once created."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the draft order"
+                },
+                "customer": {
+                    "type": "string",
+                    "description": "Customer object will be serialized with only the default address, however only the ID can be set in order to associate the customer to the draft order. Setting the value to null removes the customer from the draft order."
+                },
+                "line_items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/line_item"
+                    }
+                }
+            }
+        },
+        "draft_order_invoice": {
+            "type": "object",
+            "properties": {
+                "to": {
+                    "type": "string",
+                    "description": "Use parameter value, but default to draft order email or customer value if parameter not set. If email is blank everywhere, error out."
+                },
+                "from": {
+                    "type": "string",
+                    "description": "One of the staff accoun e-mail addresses."
+                },
+                "bcc": {
+                    "type": "string",
+                    "description": "array of staff account e-mail addresses."
+                },
+                "subject": {
+                    "type": "string",
+                    "description": "subject of custom message injected into the template."
+                },
+                "custom_message": {
+                    "type": "string",
+                    "description": "Custom message that will be injected into the invoice template."
+                }
+            }
+        },
+        "checkout": {
+            "type": "object",
+            "properties": {
+                "to": {
+                    "type": "string",
+                    "description": "Use parameter value, but default to draft order email or customer value if parameter not set. If email is blank everywhere, error out."
+                },
+                "from": {
+                    "type": "string",
+                    "description": "One of the staff accoun e-mail addresses."
+                },
+                "bcc": {
+                    "type": "string",
+                    "description": "array of staff account e-mail addresses."
+                },
+                "subject": {
+                    "type": "string",
+                    "description": "subject of custom message injected into the template."
+                },
+                "custom_message": {
+                    "type": "string",
+                    "description": "Custom message that will be injected into the invoice template."
+                }
+            }
+        },
+        "line_item": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Can’t be null"
+                }
+            }
+        },
+        "shipping_rate": {
+            "type": "object",
+            "properties": {
+                "handle": {
+                    "type": "string",
+                    "description": "handle of the shipping rate"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "title of the shipping rate"
+                }
+            }
+        }
+    },
+    "parameters": {
+        "fields": {
+            "name": "fields",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated list of fields to include in the response",
+            "type": "string"
+        },
+        "id": {
+            "name": "id",
+            "in": "query",
+            "required": false,
+            "description": "id of the draft order",
+            "type": "string"
+        },
+        "Integer": {
+            "name": "Integer",
+            "in": "response",
+            "description": "Count of draft orders",
+            "type": "integer"
+        }
+    }
+}
