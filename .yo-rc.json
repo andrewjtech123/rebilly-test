@@ -6,7 +6,7 @@
     "redocVersion": "latest",
     "repo": "andrewjtech123/rebilly-test",
     "splitSpec": false,
-    "samples": true,
+    "samples": false,
     "installSwaggerUI": true
   }
 }
